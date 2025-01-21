@@ -1,28 +1,31 @@
 import 'package:hive/hive.dart';
 
 class bbdd {
-
   List recetasLlista = [];
 
-  //Box boxTasquesApp = sirve para acceder a la box de dades
+  // Box para acceder a la base de datos
   final Box boxTasquesApp = Hive.box("box_tasques_app");
 
-  // Dades de ejemplo
-  void crearDadesExemple() { 
-    recetasLlista= [
-        {"titol": "Spaggetti a la boloñesa", "value": 1},
-        {"titol": "Albondigas", "value": 2},
-        {"titol": "Paella","value": 3},
+  // Datos de ejemplo
+  void crearDadesExemple() {
+    recetasLlista = [
+      {"titol": "Spaghetti a la boloñesa", "value": 1},
+      {"titol": "Albóndigas", "value": 2},
+      {"titol": "Paella", "value": 3},
     ];
+    actualizarDades(); // Guardar los datos de ejemplo en la base de datos
   }
-  // Carga de dades
-  void CargarDades() {
-    // el get sirve para coger datos 
-    recetasLlista = boxTasquesApp.get("box_tasques_app");
-    
-}
-// Actualización de dades
-void actualizarDades() {
-  boxTasquesApp.put("box_tasques_app", recetasLlista);
-}
+
+  // Cargar datos desde Hive
+  void cargarDades() {
+    final datos = boxTasquesApp.get("recetas");
+    if (datos != null) {
+      recetasLlista = List<Map<String, dynamic>>.from(datos);
+    }
+  }
+
+  // Actualizar datos en Hive
+  void actualizarDades() {
+    boxTasquesApp.put("recetas", recetasLlista);
+  }
 }

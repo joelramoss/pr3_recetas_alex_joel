@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pr3_recetas_alex_joel/pagines/pagina1.dart'; // Asegúrate de que esta ruta sea correcta.
 
 void main() {
   runApp(const MainApp());
@@ -9,11 +10,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
+        body: Pagina1(bbdd: ), // Llama al widget de la página 1 aquí.
       ),
     );
   }
