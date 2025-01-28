@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:pr3_recetas_alex_joel/componentes/FormularioReceta.dart';
 import 'package:pr3_recetas_alex_joel/componentes/nuevaReceta.dart';
 import 'package:pr3_recetas_alex_joel/data/bbdd.dart';
 
@@ -25,14 +26,12 @@ class _MyWidgetState extends State<Pagina1> {
     super.initState();
   }
 
-  TextEditingController _controller = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: GridView.builder(
-        gridDelegate:
-            const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 500),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 500),
         itemCount: db.recetasLlista.length,
         itemBuilder: (context, index) {
           return nuevaReceta(
@@ -40,33 +39,99 @@ class _MyWidgetState extends State<Pagina1> {
               urlimatge: db.recetasLlista[index]["urlImagen"]);
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: crearReceta,
+        child: Icon(Icons.add),
+      ),
     );
   }
 
-  void accioGuardar() {
+  // Controladores para los campos de texto
+  TextEditingController tecTextNom = TextEditingController();
+  TextEditingController tecTextDescripcion = TextEditingController();
+  TextEditingController tecTextUrlImagen = TextEditingController();
+  
+  // Lista dinámica de ingredientes (con nombre y cantidad)
+  List<Map<String, TextEditingController>> ingredientes = [];
+
+  void agregarIngrediente() {
     setState(() {
-      //Guardamos objeto en lista de objetos de la base de datos
+      ingredientes.add({
+        "nomIngredient": TextEditingController(),
+        "cantidad": TextEditingController(),
+      });
     });
-    //db.actualizarDades();
   }
 
-  void accioEliminar(int posllista) {
+  void eliminarIngrediente(int index) {
     setState(() {
-      db.recetasLlista.removeAt(posllista);
+      ingredientes.removeAt(index);
     });
-    //db.actualizarDades();
   }
 
-  //* Creacion de nueva receta
-  void crearReceta() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return nuevaReceta(
-          nomReceta: "",
-          urlimatge: "",
-        );
-      },
-    );
+void accioGuardar() {
+  setState(() {
+    // Convertimos la lista de controladores a una lista de Map<String, String>
+    List<Map<String, String>> listaIngredientes = ingredientes.map((ing) {
+      return {
+        "nomIngredient": ing["nomIngredient"]!.text,
+        "cantidad": ing["cantidad"]!.text,
+      };
+    }).toList();
+
+    // Agregamos la nueva receta con el formato correcto
+    db.recetasLlista.add({
+      "nom": tecTextNom.text,
+      "ingredientes": listaIngredientes,
+      "descripcion": tecTextDescripcion.text,
+      "urlImagen": tecTextUrlImagen.text,
+    });
+
+    // Guardamos en la base de datos
+    db.actualizarDades();
+
+    // Limpiamos los campos después de guardar
+    tecTextNom.clear();
+    tecTextDescripcion.clear();
+    tecTextUrlImagen.clear();
+    ingredientes.clear();
+  });
+
+  // Cerramos el diálogo después de guardar
+  Navigator.of(context).pop();
+}
+
+
+  void accioCancelar() {
+    Navigator.of(context).pop();
+    tecTextNom.clear();
+    tecTextDescripcion.clear();
+    tecTextUrlImagen.clear();
+    ingredientes.clear();
   }
+
+  //* Creación de nueva receta
+void crearReceta() async {
+  final nuevaReceta = await showDialog(
+    context: context,
+    builder: (context) {
+      return FormularioReceta(
+        nomReceta: tecTextNom,
+        urlImagen: tecTextUrlImagen,
+        descripcion: tecTextDescripcion,
+        accioCancelar: accioCancelar,
+        accioGuardar: null, // No usamos accioGuardar aquí, lo manejamos en el pop
+      );
+    },
+  );
+
+  if (nuevaReceta != null) {
+    setState(() {
+      db.recetasLlista.add(nuevaReceta);
+      db.actualizarDades();
+    });
+  }
+}
+
+
 }
