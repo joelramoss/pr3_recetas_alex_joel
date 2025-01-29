@@ -20,7 +20,7 @@ class _MyWidgetState extends State<Pagina1> {
     if (_boxHive.get("recetas") == null) {
       db.crearDadesExemple();
     } else {
-      db.cargarDades();
+      db.cargarDades(); 
     }
 
     super.initState();
@@ -46,6 +46,7 @@ class _MyWidgetState extends State<Pagina1> {
     );
   }
 
+<<<<<<< Updated upstream
   // Controladores para los campos de texto
   TextEditingController tecTextNom = TextEditingController();
   TextEditingController tecTextDescripcion = TextEditingController();
@@ -61,12 +62,26 @@ class _MyWidgetState extends State<Pagina1> {
         "cantidad": TextEditingController(),
       });
     });
+=======
+  void accioGuardar(String nombreReceta) {
+    if (db.recetasLlista.any((receta) => receta["nom"] == nombreReceta)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Esta receta ya existe')),
+      );
+    } else {
+      setState(() {
+        db.recetasLlista.add({"nom": nombreReceta, "urlImagen": ""});
+      });
+      db.actualizarDades();
+    }
+>>>>>>> Stashed changes
   }
 
   void eliminarIngrediente(int index) {
     setState(() {
       ingredientes.removeAt(index);
     });
+<<<<<<< Updated upstream
   }
 
 void accioGuardar() {
@@ -130,6 +145,29 @@ void crearReceta() async {
       db.recetasLlista.add(nuevaReceta);
       db.actualizarDades();
     });
+=======
+    db.actualizarDades();
+  }
+
+  //* Creacion de nueva receta
+  void crearReceta() {
+    TextEditingController nomRecetaController = TextEditingController();
+    TextEditingController urlImagenController = TextEditingController();
+    
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+          child: FormularioReceta(
+            nomReceta: nomRecetaController,
+            urlImagen: urlImagenController,
+            onGuardar: () => accioGuardar(nomRecetaController.text),
+          ),
+        );
+      },
+    );
+>>>>>>> Stashed changes
   }
 }
 
