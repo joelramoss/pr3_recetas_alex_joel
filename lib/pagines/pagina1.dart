@@ -17,36 +17,14 @@ class _MyWidgetState extends State<Pagina1> {
 
   @override
   void initState() {
+    super.initState();
     if (_boxHive.get("recetas") == null) {
       db.crearDadesExemple();
     } else {
       db.cargarDades(); 
     }
-
-    super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 500),
-        itemCount: db.recetasLlista.length,
-        itemBuilder: (context, index) {
-          return nuevaReceta(
-              nomReceta: db.recetasLlista[index]["nom"],
-              urlimatge: db.recetasLlista[index]["urlImagen"]);
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: crearReceta,
-        child: Icon(Icons.add),
-      ),
-    );
-  }
-
-<<<<<<< Updated upstream
   // Controladores para los campos de texto
   TextEditingController tecTextNom = TextEditingController();
   TextEditingController tecTextDescripcion = TextEditingController();
@@ -62,7 +40,14 @@ class _MyWidgetState extends State<Pagina1> {
         "cantidad": TextEditingController(),
       });
     });
-=======
+  }
+
+  void eliminarIngrediente(int index) {
+    setState(() {
+      ingredientes.removeAt(index);
+    });
+  }
+
   void accioGuardar(String nombreReceta) {
     if (db.recetasLlista.any((receta) => receta["nom"] == nombreReceta)) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -74,48 +59,41 @@ class _MyWidgetState extends State<Pagina1> {
       });
       db.actualizarDades();
     }
->>>>>>> Stashed changes
   }
 
-  void eliminarIngrediente(int index) {
+  // Función para eliminar una receta
+  void eliminarReceta(int index) {
     setState(() {
-      ingredientes.removeAt(index);
+      db.recetasLlista.removeAt(index);
+      db.actualizarDades();
     });
-<<<<<<< Updated upstream
   }
 
-void accioGuardar() {
-  setState(() {
-    // Convertimos la lista de controladores a una lista de Map<String, String>
-    List<Map<String, String>> listaIngredientes = ingredientes.map((ing) {
-      return {
-        "nomIngredient": ing["nomIngredient"]!.text,
-        "cantidad": ing["cantidad"]!.text,
-      };
-    }).toList();
+  // Creación de nueva receta
+  void crearReceta() async {
+    final nuevaReceta = await showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+          child: FormularioReceta(
+            nomReceta: tecTextNom,
+            urlImagen: tecTextUrlImagen,
+            descripcion: tecTextDescripcion,
+            accioCancelar: accioCancelar,
+            accioGuardar: () => accioGuardar(tecTextNom.text),
+          ),
+        );
+      },
+    );
 
-    // Agregamos la nueva receta con el formato correcto
-    db.recetasLlista.add({
-      "nom": tecTextNom.text,
-      "ingredientes": listaIngredientes,
-      "descripcion": tecTextDescripcion.text,
-      "urlImagen": tecTextUrlImagen.text,
-    });
-
-    // Guardamos en la base de datos
-    db.actualizarDades();
-
-    // Limpiamos los campos después de guardar
-    tecTextNom.clear();
-    tecTextDescripcion.clear();
-    tecTextUrlImagen.clear();
-    ingredientes.clear();
-  });
-
-  // Cerramos el diálogo después de guardar
-  Navigator.of(context).pop();
-}
-
+    if (nuevaReceta != null) {
+      setState(() {
+        db.recetasLlista.add(nuevaReceta);
+        db.actualizarDades();
+      });
+    }
+  }
 
   void accioCancelar() {
     Navigator.of(context).pop();
@@ -125,51 +103,104 @@ void accioGuardar() {
     ingredientes.clear();
   }
 
-  //* Creación de nueva receta
-void crearReceta() async {
-  final nuevaReceta = await showDialog(
-    context: context,
-    builder: (context) {
-      return FormularioReceta(
-        nomReceta: tecTextNom,
-        urlImagen: tecTextUrlImagen,
-        descripcion: tecTextDescripcion,
-        accioCancelar: accioCancelar,
-        accioGuardar: null, // No usamos accioGuardar aquí, lo manejamos en el pop
-      );
-    },
-  );
-
-  if (nuevaReceta != null) {
-    setState(() {
-      db.recetasLlista.add(nuevaReceta);
-      db.actualizarDades();
-    });
-=======
-    db.actualizarDades();
-  }
-
-  //* Creacion de nueva receta
-  void crearReceta() {
-    TextEditingController nomRecetaController = TextEditingController();
-    TextEditingController urlImagenController = TextEditingController();
-    
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-          child: FormularioReceta(
-            nomReceta: nomRecetaController,
-            urlImagen: urlImagenController,
-            onGuardar: () => accioGuardar(nomRecetaController.text),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Mis Recetas"),
+        backgroundColor: Colors.teal,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blueAccent, Colors.purpleAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
-        );
-      },
+        ),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue[50]!, Colors.purple[50]!],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 500),
+          itemCount: db.recetasLlista.length,
+          itemBuilder: (context, index) {
+            return Card(
+              elevation: 5,
+              margin: EdgeInsets.all(10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.network(
+                      db.recetasLlista[index]["urlImagen"] ?? "",
+                      height: 150,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      db.recetasLlista[index]["nom"],
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.teal,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      // Confirmación de eliminación de una receta
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text("Eliminar receta"),
+                            content: Text("¿Estás seguro de que quieres eliminar esta receta?"),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  eliminarReceta(index);
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("Sí, eliminar"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text("Cancelar"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: crearReceta,
+        child: Icon(Icons.add),
+        backgroundColor: Colors.purpleAccent,
+      ),
     );
->>>>>>> Stashed changes
   }
-}
-
-
 }

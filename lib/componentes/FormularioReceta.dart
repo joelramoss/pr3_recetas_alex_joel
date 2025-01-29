@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-<<<<<<< Updated upstream
 class FormularioReceta extends StatefulWidget {
   final TextEditingController nomReceta;
   final TextEditingController urlImagen;
@@ -149,7 +148,6 @@ class _FormularioRecetaState extends State<FormularioReceta> {
                       "urlImagen": widget.urlImagen.text,
                     });
                   }
-                  
                 },
                 child: Text('Guardar Receta'),
               ),
@@ -162,43 +160,6 @@ class _FormularioRecetaState extends State<FormularioReceta> {
             ],
           ),
         ),
-=======
-class FormularioReceta extends StatelessWidget {
-  final TextEditingController nomReceta;
-  final TextEditingController urlImagen;
-
-  const FormularioReceta({super.key, required this.nomReceta, required this.urlImagen, required void Function() onGuardar});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextFormField(
-            controller: nomReceta,
-            decoration: InputDecoration(
-              labelText: 'Nombre de la receta',
-              hintText: 'Ingrese el nombre de la receta',
-            ),
-          ),
-          TextFormField(
-            controller: urlImagen,
-            decoration: InputDecoration(
-              labelText: 'URL de la imagen',
-              hintText: 'Ingrese la URL de la imagen',
-            ),
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('Guardar Receta'),
-          ),
-        ],
->>>>>>> Stashed changes
       ),
     );
   }
