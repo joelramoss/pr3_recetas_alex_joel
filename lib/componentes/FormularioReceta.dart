@@ -4,6 +4,7 @@ class FormularioReceta extends StatefulWidget {
   final TextEditingController nomReceta;
   final TextEditingController urlImagen;
   final TextEditingController descripcion;
+  final TextEditingController tempsPrep;
   final Function()? accioGuardar;
   final Function()? accioCancelar;
 
@@ -12,6 +13,7 @@ class FormularioReceta extends StatefulWidget {
     required this.nomReceta,
     required this.urlImagen,
     required this.descripcion,
+    required this.tempsPrep,
     required this.accioGuardar,
     required this.accioCancelar,
   });
@@ -111,6 +113,14 @@ class _FormularioRecetaState extends State<FormularioReceta> {
 
               const SizedBox(height: 10),
               TextFormField(
+                controller: widget.tempsPrep,
+                decoration: InputDecoration(
+                  labelText: 'Tiempo de preparación',
+                  hintText: 'Ingrese el tiempo de preparación',
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
                 controller: widget.descripcion,
                 decoration: InputDecoration(
                   labelText: 'Descripción',
@@ -127,7 +137,7 @@ class _FormularioRecetaState extends State<FormularioReceta> {
               ),
               const SizedBox(height: 20),
 
-              // BOTÓN PARA GUARDAR
+// BOTÓN PARA GUARDAR
               ElevatedButton(
                 onPressed: () {
                   if (widget.nomReceta.text.isNotEmpty) {
@@ -140,12 +150,14 @@ class _FormularioRecetaState extends State<FormularioReceta> {
                       };
                     }).toList();
 
-                    // Devolver los datos al cerrar el formulario
+                    // Devolver los datos al cerrar el formulario, incluyendo el tiempo de preparación
                     Navigator.pop(context, {
                       "nom": widget.nomReceta.text,
                       "descripcion": widget.descripcion.text,
                       "ingredientes": listaIngredientes,
                       "urlImagen": widget.urlImagen.text,
+                      "tempsPrep": widget.tempsPrep
+                          .text, // Se agrega el tiempo de preparación aquí
                     });
                   }
                 },
