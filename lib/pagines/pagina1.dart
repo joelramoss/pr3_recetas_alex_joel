@@ -1,6 +1,8 @@
+// Pagina1.dart
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:pr3_recetas_alex_joel/componentes/FormularioReceta.dart';
+import 'package:pr3_recetas_alex_joel/componentes/drawer.dart';
 import 'package:pr3_recetas_alex_joel/data/bbdd.dart';
 
 class Pagina1 extends StatefulWidget {
@@ -176,8 +178,7 @@ class _Pagina1State extends State<Pagina1> {
                                     receta["ingredientes"] != null &&
                                     receta["ingredientes"].isNotEmpty
                                 ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       // Encabezado
                                       Row(
@@ -259,31 +260,47 @@ class _Pagina1State extends State<Pagina1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Se asigna el drawer al lado derecho y se le pasa la función para crear receta
+      endDrawer: ddrawer(onCrearReceta: crearReceta),
       appBar: AppBar(
         title: Text(
           "Mis Recetas",
           style: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
         actions: [
-          Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Icon(Icons.person, color: Colors.white, size: 40),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Text(
-                      widget.username,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+          // Usamos Builder para obtener el contexto correcto y abrir el endDrawer
+          Builder(
+            builder: (context) {
+              return InkWell(
+                onTap: () {
+                  Scaffold.of(context).openEndDrawer();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Icon(Icons.person, color: Colors.white, size: 40),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Text(
+                          widget.username,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ))
+                ),
+              );
+            },
+          ),
         ],
         backgroundColor: Colors.teal,
         flexibleSpace: Container(
@@ -306,7 +323,8 @@ class _Pagina1State extends State<Pagina1> {
         ),
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 320),
+            maxCrossAxisExtent: 320,
+          ),
           itemCount: db.recetasLlista.length,
           itemBuilder: (context, index) {
             return Dismissible(
