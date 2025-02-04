@@ -6,11 +6,11 @@ class ListaIngredientesWidget extends StatefulWidget {
   final Function(int) eliminarIngrediente;
 
   const ListaIngredientesWidget({
-    Key? key,
+    super.key,
     required this.ingredientes,
     required this.agregarIngrediente,
     required this.eliminarIngrediente,
-  }) : super(key: key);
+  });
 
   @override
   _ListaIngredientesWidgetState createState() =>

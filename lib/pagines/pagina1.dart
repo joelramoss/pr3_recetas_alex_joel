@@ -242,10 +242,10 @@ class _Pagina1State extends State<Pagina1> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text("Cerrar"),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.purpleAccent,
                     ),
+                    child: Text("Cerrar"),
                   ),
                 ],
               ),
@@ -350,8 +350,8 @@ class _Pagina1State extends State<Pagina1> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: crearReceta,
-        child: Icon(Icons.add),
         backgroundColor: Colors.purpleAccent,
+        child: Icon(Icons.add),
       ),
     );
   }
