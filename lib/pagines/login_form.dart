@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:pr3_recetas_alex_joel/data/user_db.dart';
 import 'package:pr3_recetas_alex_joel/pagines/pagina1.dart';
 
-
 class LoginForm extends StatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
 
@@ -15,6 +14,7 @@ class _LoginFormState extends State<LoginForm> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   String _message = '';
+  bool _showPassword = true;
 
   void _login() {
     final username = _usernameController.text.trim();
@@ -97,8 +97,17 @@ class _LoginFormState extends State<LoginForm> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.remove_red_eye),
+                  onPressed: () {
+                    setState(() {
+                      _showPassword = !_showPassword;
+                      
+                    });
+                  },
+                ),
               ),
-              obscureText: true,
+              obscureText: _showPassword,
             ),
             const SizedBox(height: 20),
             Row(
@@ -108,7 +117,8 @@ class _LoginFormState extends State<LoginForm> {
                   onPressed: _login,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blueAccent,
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -119,7 +129,8 @@ class _LoginFormState extends State<LoginForm> {
                   onPressed: _register,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purpleAccent,
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 12),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -132,7 +143,8 @@ class _LoginFormState extends State<LoginForm> {
             if (_message.isNotEmpty)
               Text(
                 _message,
-                style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    color: Colors.red, fontWeight: FontWeight.bold),
               ),
           ],
         ),

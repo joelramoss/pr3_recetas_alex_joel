@@ -7,6 +7,7 @@ class bbdd {
   final Box boxTasquesApp = Hive.box("recetas");
 
   // Datos de ejemplo
+  
   void crearDadesExemple() {
     recetasLlista = [
       {

@@ -260,13 +260,30 @@ class _Pagina1State extends State<Pagina1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Mis Recetas"),
+        title: Text(
+          "Mis Recetas",
+          style: TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
         actions: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child:
-                Center(child: Text("Iniciado sesión como: ${widget.username}")),
-          )
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Icon(Icons.person, color: Colors.white, size: 40),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10),
+                    child: Text(
+                      widget.username,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ))
         ],
         backgroundColor: Colors.teal,
         flexibleSpace: Container(
