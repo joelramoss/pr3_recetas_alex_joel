@@ -14,6 +14,7 @@ class _LoginFormState extends State<LoginForm> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   String _message = '';
+  // Si _showPassword es true, se oculta la contraseña (obscureText: true)
   bool _showPassword = true;
 
   void _login() {
@@ -98,11 +99,15 @@ class _LoginFormState extends State<LoginForm> {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 suffixIcon: IconButton(
-                  icon: const Icon(Icons.remove_red_eye),
+                  icon: Icon(
+                    Icons.remove_red_eye,
+                    // Si _showPassword es true (contraseña oculta) se muestra en gris,
+                    // si es false (contraseña visible) se muestra en azul.
+                    color: _showPassword ? Colors.grey : Colors.blueAccent,
+                  ),
                   onPressed: () {
                     setState(() {
                       _showPassword = !_showPassword;
-                      
                     });
                   },
                 ),
